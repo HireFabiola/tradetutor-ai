@@ -21,6 +21,18 @@
 
 ## Milestone 2 — (not yet started)
 
+## Milestone 5 — Input Validation With Pydantic
+- Built `ScenarioAnswer` with `Field()` constraints (`numeric_answer > 0`, `reasoning_text` 15-200 chars) and a `model_validator` cross-field check for stop-loss == entry price.
+- Caught and fixed an indentation bug where instantiation code was nested inside the class body instead of after it.
+- Verified all three paths: valid input passes, cross-field validation error fires, single-field validation error fires.
+- Design note: validated whether `entry_price`/`stop_loss_price` belong on `ScenarioAnswer` itself or a separate `Scenario` model, since the MVP has only one fixed scenario — decided to keep it simple for now, revisit if dynamic scenario generation becomes a real post-MVP enhancement.
+
+## Milestone 6 — Local LLM Client Hardening
+- Built the first local LLM client in `app/rag/llm_client.py` using the Ollama Python library and a small `llama3.2:1b` default model.
+- Added user-facing error handling so connection failures and invalid model responses no longer fail silently.
+- Confirmed the function returns friendly guidance instead of crashing when Ollama is unavailable or the model config is wrong.
+- Design note: keep model communication logic separate from UI code so the Q&A flow can be tested independently and swapped later without rewriting the app layer.
+
 ---
 
 *Add new entries above this line as you progress. Keep the format loose — the goal is to capture the moment, not write polished prose (that happens later, in the final README/presentation).* 
