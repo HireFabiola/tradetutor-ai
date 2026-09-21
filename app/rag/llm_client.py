@@ -47,4 +47,15 @@ def ask_model(prompt: str, model: str = "llama3.2:1b") -> str:
         )
 
 if __name__ == "__main__":
-    print(ask_model("Can you tell me which stock to buy?"))
+    test_questions = [
+        "What is a stop-loss in trading?",
+        "How does position sizing affect risk management?",
+        "What is a risk/reward ratio?",
+        "What is a good risk/reward ratio for a trade?",
+        "What is a good stock for me to buy right now"
+    ]
+
+    for question in test_questions:
+        print(f"Q: {question}")
+        print(f"A: {ask_model(question)}")
+        print("-" * 40)  # a visual separator between each Q&A pairWh
