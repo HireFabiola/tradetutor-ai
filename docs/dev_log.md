@@ -59,6 +59,22 @@
 - Remaining failure (protection query still favors ratio over stop-loss): root-caused to vocabulary mismatch — the SHORTENED test sentence for stop-loss uses mechanism language ("executes automatically") rather than purpose language ("protects," "limits your loss"), while the real knowledge_stop_loss.md file already uses the more matching phrasing. Expect this to resolve once Milestone 10 embeds the full real documents instead of single hand-picked test sentences.
 - Lesson: chunk wording quality directly affects retrieval quality — this is controllable, not just a model limitation to accept. Combined with top-k retrieval (k=2-3, already planned for Milestone 10) and richer real content (more chunks per concept), expect meaningfully better discrimination than this 3-sentence stress test could show.
 
+## Milestone 10 — ChromaDB Storage & Retrieval ✅ COMPLETE
+- Built and verified `load_chunks()` to read Markdown, split content into paragraph-level chunks on blank lines, remove empty chunks, and filter heading-only lines so markdown headers are not embedded as low-value entries.
+- Built and verified `load_all_chunks()` to auto-discover `.md` files in `data/lessons/` and `data/knowledge/`, preserve each chunk's source filename as metadata, and load 18 total chunks across 3 files.
+- Loaded the `all-MiniLM-L6-v2` model and confirmed that each chunk is represented as a 384-dimensional vector; embedding matrix shape is `(18, 384)`.
+- Manually tested semantic retrieval before ChromaDB: embedded a query, computed cosine similarity against all 18 chunk embeddings, ranked by similarity, and verified that relevant stop-loss and risk/reward chunks were returned even without exact wording matches.
+- Confirmed that similarity scores are comparative and should not be treated as a universal relevance threshold.
+- Installed ChromaDB and resolved the Intel macOS dependency issue by pinning `onnxruntime==1.22.1` after the default resolver selected a version without a compatible `x86_64` wheel.
+- Created persistent ChromaDB storage in `data/chroma_db`, opened the `tradetutor_knowledge` collection, and stored all 18 chunks with unique IDs, text, embeddings, and source metadata.
+- Verified persistence by restarting the Python process, reopening the same collection, and confirming `collection.count()` still returned 18 records even after the in-memory embedding array was no longer present.
+- Built `app/rag/retriever.py` to load the same embedding model, connect to the persisted collection, embed a learner question, and retrieve the top 3 matching chunks by vector similarity.
+- Validated retrieval against the manual cosine-similarity baseline: the same three chunks were returned in the same order for both the risk/reward and stop-loss questions, confirming the persisted ChromaDB retrieval layer was working as expected.
+- Tested a new question, "Why is win rate important when evaluating a trading strategy?", and confirmed ChromaDB retrieved relevant win-rate educational content, showing retrieval works beyond the original validation examples.
+- Reinforced the key concept: embeddings represent semantic meaning numerically, but the query and stored documents must use the same model and occupy the same embedding space for meaningful search results.
+- Final milestone takeaway: TradeTutor now has a working persistent semantic retrieval layer that can take educational content from Markdown files, embed it, store it in ChromaDB, and retrieve the relevant educational chunks for learner questions.
+- Next milestone: Milestone 11 — connect retrieval to the LLM via RAG, passing the retrieved context into the Ollama prompt so the model can answer with grounded educational guidance.
+
 ---
 
 *Add new entries above this line as you progress. Keep the format loose — the goal is to capture the moment, not write polished prose (that happens later, in the final README/presentation).* 
