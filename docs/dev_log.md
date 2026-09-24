@@ -92,6 +92,19 @@
 - Testing checkpoint: 4 cases (strong / middle / weak / off-topic) now score in line with manual human judgment.
 - Known limitation, accepted for the MVP: `calculation_process` still uses substring matching on the raw digits (e.g. "6") for the risk/reward figures, so it could false-positive if the same digit appears for an unrelated reason in the reasoning text. This is low practical risk for a single fixed scenario with distinctive numbers ($6, $18), so it was deferred rather than broadened into a larger solution.
 
+## Milestone 13 — Misconception Detection & Progress Persistence
+- Added misconception detection and SQLite persistence so TradeTutor can now evaluate a learner's answer beyond whether the final number is correct and save the results of each attempt.
+- In `evaluation_service.py`, added two misconceptions tied directly to the Risk Management lesson: `ratio_implies_certainty` for learners who assume a favorable risk/reward ratio guarantees a profitable trade, and `risk_reward_swapped` for learners who reverse risk and reward values in their explanation.
+- Initially explored simpler text matching, but found it could produce false positives. For the risk/reward swap detector, moved to a more precise regex-based approach that looks for numbers near the words risk and reward, then compares those values against the actual scenario values. Tested both positive and negative cases so valid reasoning is not flagged accidentally.
+- Created `app/database/db.py` and persistent SQLite storage at `data/tradetutor.db`. Each row in `learner_attempts` represents one learner attempt and stores the scenario ID, numeric answer, numeric correctness, written reasoning, rubric score, detected misconceptions, and timestamp.
+- Implemented and tested `initialize_database()`, `save_attempt()`, and `get_attempts()`. Moved timestamp generation into `save_attempt()` so the database layer owns when an attempt is recorded instead of requiring the rest of the application to supply that value.
+- During integration, noticed the new attempt service would duplicate risk and reward calculations already handled in `risk_reward.py`. Refactored the calculation module to expose `calculate_risk()`, `calculate_reward()`, and `risk_reward_ratio()` so deterministic trading math stays in one source of truth.
+- Created `app/services/attempt_service.py` with `process_attempt()` to orchestrate the full learner-attempt workflow: learner answer -> deterministic risk/reward calculation -> numeric correctness check -> reasoning rubric evaluation -> misconception detection -> SQLite persistence. The service coordinates the other modules without duplicating their responsibilities.
+- End-to-end test used the Meridian Robotics scenario ($60 entry, $54 stop-loss, $78 target), where the correct risk/reward ratio is 3.0. A strong response produced `numeric_correct=True`, rubric score `3.0 / 3.0`, and no misconceptions. A second response calculated 3.0 correctly but claimed the ratio guaranteed profitability; TradeTutor produced `numeric_correct=True`, rubric score `2.0 / 3.0`, and `["ratio_implies_certainty"]`.
+- Confirmed both attempts persisted successfully in SQLite with automatically generated timestamps.
+- Key takeaway: numeric correctness, reasoning quality, and misconceptions need to be stored separately. A learner can arrive at the correct numerical answer while still misunderstanding the underlying concept.
+- Final milestone takeaway: TradeTutor now has a complete backend learner-evaluation pipeline that can calculate the authoritative answer, evaluate reasoning, identify targeted misconceptions, and persist the learner's attempt for future progress tracking.
+
 ---
 
 *Add new entries above this line as you progress. Keep the format loose — the goal is to capture the moment, not write polished prose (that happens later, in the final README/presentation).* 

@@ -1,5 +1,6 @@
 import sqlite3
 from pathlib import Path
+from datetime import datetime
 
 
 DB_PATH = Path("data/tradetutor.db")
@@ -32,8 +33,9 @@ def save_attempt(
     reasoning_text: str,
     rubric_score: float,
     misconceptions: list[str],
-    timestamp: str,
 ):
+    timestamp = datetime.now().isoformat(timespec="seconds")
+
     with sqlite3.connect(DB_PATH) as connection:
         connection.execute(
             """
@@ -59,6 +61,18 @@ def save_attempt(
             ),
         )
 
+
+def get_attempts():
+    with sqlite3.connect(DB_PATH) as connection:
+        cursor = connection.execute(
+            """
+            SELECT *
+            FROM learner_attempts
+            ORDER BY id
+            """
+        )
+
+        return cursor.fetchall()
 
 if __name__ == "__main__":
     initialize_database()
