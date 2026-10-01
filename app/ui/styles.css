@@ -1,0 +1,396 @@
+
+    /* ---------- APP BACKGROUND ---------- */
+    .stApp {
+        background-color: #F7F6F1;
+    }
+
+    /* ---------- MAIN PAGE WIDTH ---------- */
+    .block-container {
+        max-width: 1200px;
+        padding-top: 2rem;
+        padding-bottom: 4rem;
+    }
+
+    /* ---------- TYPOGRAPHY ---------- */
+    h1, h2, h3, h4 {
+        color: #183B45;
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        font-weight: 800;
+        letter-spacing: -0.03em;
+    }
+
+    p {
+        color: #44545A;
+    }
+
+    /* ---------- BUTTONS ---------- */
+    .stButton > button {
+        background-color: #173F4A;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 0.65rem 1.4rem;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .stButton > button:hover {
+        background-color: #2A7F7B;
+        color: white;
+        border: none;
+    }
+
+    /* ---------- INPUTS ---------- */
+    .stTextInput input,
+    .stTextArea textarea,
+    .stNumberInput input {
+        border-radius: 10px;
+        border: 1px solid #D8DEDC;
+        background-color: white;
+    }
+
+    /* ---------- DIVIDERS ---------- */
+    hr {
+        border: none;
+        border-top: 1px solid #DDE3E0;
+        margin: 2rem 0;
+    }
+
+    /* ---------- CUSTOM CARDS ---------- */
+    .tt-card {
+        background: white;
+        border: 1px solid #E4E7E5;
+        border-radius: 18px;
+        padding: 1.5rem;
+        margin-bottom: 1.25rem;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    }
+
+    /* ---------- SMALL LABEL ---------- */
+    .tt-label {
+        color: #2A7F7B;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+/* ---------- KEY TAKEAWAYS ---------- */
+
+.takeaway-card {
+    background-color: #FFFFFF !important;
+    border: 1px solid #DDE5E2;
+    border-radius: 18px;
+    padding: 24px 28px;
+    margin-top: 28px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.takeaway-title {
+    color: #173F4A !important;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.formula-row {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.formula-box {
+    flex: 1;
+    background-color: #EAF4F1 !important;
+    border: 1px solid #D5E8E3;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.formula-box span {
+    display: block;
+    color: #28766F !important;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.formula-box strong {
+    color: #173F4A !important;
+    font-size: 16px;
+}
+
+.takeaway-note {
+    background-color: #FFF1D8 !important;
+    border-left: 4px solid #E7A84B;
+    border-radius: 8px;
+    padding: 13px 16px;
+    color: #59482F !important;
+    font-size: 14px;
+}
+
+.takeaway-note strong {
+    color: #59482F !important;
+}
+
+/* ---------- ASK TRADETUTOR ---------- */
+
+.ask-card-header {
+    background: linear-gradient(135deg, #EAF4F1 0%, #F5FAF8 100%);
+    border: 1px solid #D5E8E3;
+    border-radius: 18px 18px 8px 8px;
+    padding: 22px 26px;
+    margin-top: 12px;
+    margin-bottom: 14px;
+}
+
+.ask-label {
+    color: #2A7F7B !important;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.ask-title {
+    color: #173F4A !important;
+    font-size: 23px;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.ask-description {
+    color: #52666A !important;
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 760px;
+}
+
+.tutor-response {
+    background-color: #FFFFFF;
+    border-left: 4px solid #2A7F7B;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-top: 16px;
+}
+
+/* ---------- LESSON VIDEO SECTION ---------- */
+
+.video-section-header {
+    background: linear-gradient(135deg, #EAF4F1 0%, #F7FBF9 100%);
+    border: 1px solid #D5E8E3;
+    border-radius: 18px;
+    padding: 20px 26px;
+    margin-top: 8px;
+    margin-bottom: 18px;
+}
+
+.video-label {
+    color: #2A7F7B !important;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.video-title {
+    color: #173F4A !important;
+    font-size: 23px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.video-description {
+    color: #52666A !important;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.video-part {
+    color: #2A7F7B !important;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+}
+
+.video-part-title {
+    color: #173F4A !important;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+/* ---------- STREAMLIT TEXT CONTRAST ---------- */
+
+.stApp,
+.stApp [data-testid="stMarkdownContainer"],
+.stApp label {
+    color: #173F4A;
+}
+
+.stApp h1,
+.stApp h2,
+.stApp h3,
+.stApp h4,
+.stApp h5,
+.stApp h6 {
+    color: #173F4A !important;
+}
+
+.stApp [data-testid="stWidgetLabel"] p {
+    color: #173F4A !important;
+    font-weight: 600;
+}
+
+/* ---------- PRACTICE SECTION ---------- */
+
+.practice-header {
+    background: linear-gradient(135deg, #FFF8EE, #FFFFFF);
+    border: 1px solid #F0E4D6;
+    border-radius: 18px;
+    padding: 22px 26px;
+    margin-top: 28px;
+    margin-bottom: 16px;
+}
+
+.practice-label {
+    color: #CB762C !important;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.practice-title {
+    color: #173F4A !important;
+    font-size: 25px;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.practice-description {
+    color: #52666A !important;
+    font-size: 15px;
+}
+
+.price-row {
+    display: flex;
+    gap: 14px;
+    margin: 16px 0 22px;
+}
+
+.price-card {
+    flex: 1;
+    min-width: 0;
+    padding: 20px 12px;
+    text-align: center;
+    border-radius: 14px;
+    background: #EAF3F9;
+    border: 1px solid #D4E5EF;
+}
+
+.price-card span {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #315E84 !important;
+}
+
+.price-card strong {
+    display: block;
+    font-size: 29px;
+    font-weight: 800;
+    color: #14528C !important;
+    margin-top: 5px;
+}
+
+.stop-card {
+    background: #FFF0ED;
+    border-color: #F6D9D4;
+}
+
+.stop-card span,
+.stop-card strong {
+    color: #D62C43 !important;
+}
+
+.target-card {
+    background: #EAF7F1;
+    border-color: #CBE9DC;
+}
+
+.target-card span,
+.target-card strong {
+    color: #078D75 !important;
+}
+
+/* ---------- FEEDBACK SECTION ---------- */
+
+.feedback-header {
+    background: #E6F5EF;
+    border: 1px solid #CBE9DE;
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin: 24px 0 16px;
+}
+
+.feedback-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #173F4A !important;
+}
+
+.feedback-description {
+    font-size: 14px;
+    color: #52666A !important;
+    margin-top: 5px;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 700px) {
+    .price-row {
+        flex-direction: column;
+    }
+
+    .formula-row {
+        flex-direction: column;
+    }
+
+    .practice-header,
+    .feedback-header {
+        padding: 18px;
+    }
+}
+
+/* ---------- INPUT AND BUTTON READABILITY ---------- */
+
+.stApp .stButton > button {
+    background-color: #173F4A !important;
+    color: #FFFFFF !important;
+}
+
+.stApp .stButton > button p {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+}
+
+.stApp input,
+.stApp textarea {
+    color: #173F4A !important;
+    background-color: #FFFFFF !important;
+}
+
+.stApp input::placeholder,
+.stApp textarea::placeholder {
+    color: #78898D !important;
+    opacity: 1 !important;
+}

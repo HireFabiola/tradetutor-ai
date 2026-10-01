@@ -105,6 +105,23 @@
 - Key takeaway: numeric correctness, reasoning quality, and misconceptions need to be stored separately. A learner can arrive at the correct numerical answer while still misunderstanding the underlying concept.
 - Final milestone takeaway: TradeTutor now has a complete backend learner-evaluation pipeline that can calculate the authoritative answer, evaluate reasoning, identify targeted misconceptions, and persist the learner's attempt for future progress tracking.
 
+## Milestone 14 — UI/UX Refinement and Styling
+- Shifted focus from backend capability to learner-facing presentation: the goal was to make the Streamlit MVP feel more cohesive, readable, and aligned with the approved TradeTutor AI visual mockup without changing the existing retrieval, calculation, evaluation, or persistence behavior.
+- Established a consistent visual identity around a cream background, navy/teal/warm-orange accents, rounded cards, custom button styling, stronger typography, and a right-aligned TradeTutor AI brand mark at the top of the page.
+- Added a gradient lesson hero for the Risk/Reward Ratios module to make the first screen feel more like a guided learning experience instead of a plain technical demo.
+- Reworked the lesson video section into three columns for the HeyGen lesson segments, with a styled section header and individual video titles. Removed duplicate embeds so each lesson part appears once.
+- Added a Key Takeaways card for the three core formulas: risk = entry - stop-loss, reward = target - entry, and risk/reward ratio = reward / risk. Included the important safety reminder that a favorable ratio does not guarantee a successful trade.
+- Styled the Ask TradeTutor area with a dedicated AI Tutor header while keeping the existing question input and RAG-powered answer flow intact. Improved text, input, and button contrast for readability.
+- Refined the Meridian Robotics practice interface with a dedicated practice header, three color-coded scenario cards (entry $60, stop-loss $54, target $78), and a clearer two-column input layout for the numeric answer and written reasoning.
+- Refined the feedback experience into three columns: numeric answer correctness, reasoning rubric score, and misconception detection. Kept the feedback conditional so learners only see evaluation after submitting, and used Streamlit session state to preserve the result across reruns.
+- Issue caught: raw HTML rendered as a Markdown code block when multiline HTML was indented too deeply. Fixed by adjusting the multiline string formatting and using `textwrap.dedent()` consistently.
+- Lesson learned: CSS alone does not create new UI structure. The Streamlit layout and HTML blocks have to support the visual design; styling only changes what already exists.
+- Debugging checkpoint: used a temporary visual test message to confirm Streamlit was executing the expected `home.py` file before spending more time investigating why styling changes were not appearing.
+- Maintainability issue surfaced: keeping a large global CSS block inside the Python app made the UI harder to iterate on. Follow-up refactor extracted the stylesheet into `app/ui/styles.css` and loaded it from `home.py` with `pathlib.Path`, preserving the current appearance while separating styling from application logic.
+- Verified the stylesheet refactor with `python3 -m py_compile app/ui/home.py` and checks that the CSS loader runs after `st.set_page_config()` and before the first UI components render.
+- Next UI follow-ups: refine the hero with the approved TradeTutor avatar, improve video framing and visual consistency, review responsive behavior, and handle evaluator-quality issues separately during functional testing.
+- Key takeaway: good application architecture includes the presentation layer. Separating styling from application logic makes future UI work easier without disturbing the working backend pipeline.
+
 ---
 
 *Add new entries above this line as you progress. Keep the format loose — the goal is to capture the moment, not write polished prose (that happens later, in the final README/presentation).* 
