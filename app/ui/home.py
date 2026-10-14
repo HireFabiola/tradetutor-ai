@@ -2,7 +2,6 @@ import streamlit as st
 import streamlit.components.v1 as components
 import textwrap
 from pathlib import Path
-import base64
 import hashlib
 from app.rag.llm_client import answer_question
 from app.services.attempt_service import process_attempt
@@ -31,17 +30,17 @@ st.session_state.setdefault("dark_mode", False)
 THEME_VARIABLES = {
     "light": {
         "app-bg": "#F7F6F1",
-        "text": "#173F4A",
-        "muted-text": "#52666A",
-        "body-text": "#44545A",
+        "text": "#173F42",
+        "muted-text": "#405F60",
+        "body-text": "#405F60",
         "surface": "#FFFFFF",
-        "surface-soft": "#F5FAF8",
-        "surface-teal": "#EAF4F1",
+        "surface-soft": "#EEF8F5",
+        "surface-teal": "#DDF3EE",
         "surface-warm": "#FFF8EE",
         "border": "#DDE5E2",
         "border-soft": "#E4E7E5",
-        "button-bg": "#173F4A",
-        "button-hover": "#2A7F7B",
+        "button-bg": "#07545A",
+        "button-hover": "#13747A",
         "button-text": "#FFFFFF",
         "accent-teal": "#2A7F7B",
         "accent-teal-strong": "#078D75",
@@ -116,42 +115,21 @@ st.markdown(
 )
 
 # --------------------------------------------------
-# TRADETUTOR BRAND
+# THEME CONTROL
 # --------------------------------------------------
-spacer_col, toggle_col, brand_col = st.columns(
-    [5, 1.2, 1.9],
+spacer_col, toggle_col = st.columns(
+    [6.2, 1.9],
     vertical_alignment="center",
 )
 with toggle_col:
     st.toggle("Light / Dark", key="dark_mode")
-with brand_col:
-    st.markdown(
-        textwrap.dedent("""
-<div class="tt-brand-bar">
-    <div class="tt-brand">
-        <span class="tt-brand-icon" aria-hidden="true">
-            <svg viewBox="0 0 32 32" role="img" focusable="false">
-                <line x1="9" y1="8" x2="9" y2="24" />
-                <rect x="6" y="13" width="6" height="8" rx="1.5" />
-                <line x1="16" y1="6" x2="16" y2="23" />
-                <rect x="13" y="10" width="6" height="9" rx="1.5" />
-                <line x1="23" y1="9" x2="23" y2="25" />
-                <rect x="20" y="15" width="6" height="7" rx="1.5" />
-            </svg>
-        </span>
-        <span class="tt-brand-name">TradeTutor</span>
-        <span class="tt-brand-ai">AI</span>
-    </div>
-</div>
-"""),
-        unsafe_allow_html=True,
-    )
 
 # --------------------------------------------------
 # LESSON HERO
 # --------------------------------------------------
 hero_banner_path = Path(__file__).parent / "assets" / "tradetutor_hero_banner.png"
-st.image(hero_banner_path, width="stretch")
+with st.container(key="hero_banner"):
+    st.image(hero_banner_path, width="stretch")
 
 # --------------------------------------------------
 # LESSON VIDEOS
@@ -328,326 +306,286 @@ def set_suggested_question(suggested_question: str) -> None:
     st.session_state["ask_question_input"] = suggested_question
     clear_ask_response()
 
-# Load the peeking avatar.
-avatar_path = (
-    Path(__file__).parent / "assets" / "ask_tutor_peek.png"
-)
-avatar_base64 = base64.b64encode(
-    avatar_path.read_bytes()
-).decode("utf-8")
+ask_banner_path = Path(__file__).parent / "assets" / "ask_banner.png"
 
 with st.container(key="ask_tutor_panel"):
-    # ---------- HEADER + THINKING AVATAR ----------
-    st.markdown(
-        textwrap.dedent(f"""
-        <div class="tt-ask-hero">
-            <div class="tt-ask-heading">
-                <div class="ask-icon" aria-hidden="true">
-                    ✦<br>AI
-                </div>
-                <div class="ask-header-copy">
-                    <div class="ask-label">
-                        YOUR AI LEARNING ASSISTANT
-                    </div>
-                    <div class="ask-title">
-                        Ask TradeTutor
-                    </div>
-                    <div class="ask-description">
-                        Have a question? Let's work through it together.
-                    </div>
-                </div>
-            </div>
-            <div class="tt-thinking-avatar" aria-hidden="true">
-                <img
-                    src="data:image/png;base64,{avatar_base64}"
-                    alt=""
-                >
-            </div>
-        </div>
-        <div class="ask-suggestions-label">
-            Try one of these questions:
-        </div>
-        """),
-        unsafe_allow_html=True,
-    )
+    with st.container(key="ask_banner"):
+        if ask_banner_path.is_file():
+            st.image(ask_banner_path, width="stretch")
+        else:
+            st.warning("Ask TradeTutor banner is missing from app/ui/assets/ask_banner.png.")
 
-    # ---------- SUGGESTED QUESTIONS ----------
-    suggestion_questions = [
-        "What does a 1:3 ratio mean?",
-        "Can I still lose money with a good risk/reward ratio?",
-        "Why is a stop-loss important?",
-    ]
-    suggestion_cols = st.columns(3, gap="medium")
-    for index, (col, suggestion) in enumerate(
-        zip(suggestion_cols, suggestion_questions)
-    ):
-        with col:
-            st.button(
-                f"◉  {suggestion}   ›",
-                key=f"ask_suggestion_{index}",
-                on_click=set_suggested_question,
-                args=(suggestion,),
+    with st.container(key="ask_tutor_controls"):
+        st.markdown(
+            '<div class="ask-suggestions-label">Try one of these questions:</div>',
+            unsafe_allow_html=True,
+        )
+
+        # ---------- SUGGESTED QUESTIONS ----------
+        suggestion_questions = [
+            "What does a 1:3 ratio mean?",
+            "Can I still lose money with a good risk/reward ratio?",
+            "Why is a stop-loss important?",
+        ]
+        suggestion_cols = st.columns(3, gap="medium")
+        for index, (col, suggestion) in enumerate(
+            zip(suggestion_cols, suggestion_questions)
+        ):
+            with col:
+                st.button(
+                    f"{suggestion}   ›",
+                    icon=":material/chat_bubble_outline:",
+                    key=f"ask_suggestion_{index}",
+                    on_click=set_suggested_question,
+                    args=(suggestion,),
+                    width="stretch",
+                )
+
+        # ---------- EDITABLE QUESTION INPUT ----------
+        input_col, ask_col = st.columns(
+            [5, 1],
+            gap="small",
+            vertical_alignment="bottom",
+        )
+        with input_col:
+            question = st.text_input(
+                "Your question",
+                key="ask_question_input",
+                placeholder="Ask anything about today's lesson...",
+                label_visibility="collapsed",
+                on_change=clear_ask_response,
+            )
+        cleaned_question = question.strip()
+        with ask_col:
+            ask_submitted = st.button(
+                "➤  Ask",
+                key="ask_tutor_submit",
+                disabled=not cleaned_question,
                 width="stretch",
             )
 
-    # ---------- EDITABLE QUESTION INPUT ----------
-    input_col, ask_col = st.columns(
-        [5, 1],
-        gap="small",
-        vertical_alignment="bottom",
-    )
-    with input_col:
-        question = st.text_input(
-            "Your question",
-            key="ask_question_input",
-            placeholder=(
-                "Ask about ratios, stop-losses, "
-                "or risk/reward math..."
-            ),
-            label_visibility="collapsed",
-            on_change=clear_ask_response,
-        )
-    cleaned_question = question.strip()
-    with ask_col:
-        ask_submitted = st.button(
-            "➤  Ask",
-            key="ask_tutor_submit",
-            disabled=not cleaned_question,
-            width="stretch",
-        )
-
-    # ---------- VOICE INPUT ----------
-    with st.container(key="ask_voice_panel"):
-        st.markdown(
-            textwrap.dedent("""
-            <div class="tt-voice-heading">
-                <span class="tt-voice-symbol">🎙</span>
-                <div>
-                    <div class="tt-voice-title">
-                        Prefer to speak your question?
-                    </div>
-                    <div class="tt-voice-description">
-                        Record your question. I'll transcribe
-                        it into the box above.
-                    </div>
-                </div>
-            </div>
-            """),
-            unsafe_allow_html=True,
-        )
-        audio = st.audio_input(
-            "Record your question",
-            key="ask_voice_input",
-        )
-        if audio is not None:
-            audio_hash = hashlib.sha256(
-                audio.getvalue()
-            ).hexdigest()
-            if (
-                st.session_state.get("last_audio_hash")
-                != audio_hash
-            ):
-                with st.spinner("Transcribing your question..."):
-                    transcription = transcribe_audio(audio)
-                st.session_state["last_audio_hash"] = audio_hash
-                if transcription.strip():
-                    st.session_state["pending_voice_question"] = (
-                        transcription.strip()
-                    )
-                    clear_ask_response()
-                    st.rerun()
-                else:
-                    st.warning(
-                        "No speech detected. "
-                        "Please record your question again."
-                    )
-
-    # ---------- PROCESS QUESTION ----------
-    if ask_submitted and cleaned_question:
-        with st.spinner("TradeTutor is thinking..."):
-            st.session_state["ask_tutor_response"] = (
-                answer_question(cleaned_question)
-            )
-            st.session_state["ask_tutor_last_question"] = (
-                cleaned_question
-            )
-
-    # ---------- TUTOR RESPONSE ----------
-    with st.container(key="tutor_response_card"):
-        st.markdown(
-            textwrap.dedent("""
-            <div class="tt-response-heading">
-                <span class="tt-response-icon">💡</span>
-                <span>TradeTutor explains</span>
-            </div>
-            """),
-            unsafe_allow_html=True,
-        )
-        if st.session_state["ask_tutor_response"]:
-            st.markdown(
-                st.session_state["ask_tutor_response"]
-            )
+        # ---------- VOICE INPUT ----------
+        with st.container(key="ask_voice_panel"):
             st.markdown(
                 textwrap.dedent("""
-                <div class="response-footer">
-                    Answers are grounded in
-                    TradeTutor's lesson materials.
+                <div class="tt-voice-heading">
+                    <span class="tt-voice-symbol">🎙</span>
+                    <div>
+                        <div class="tt-voice-title">
+                            Prefer to speak your question?
+                        </div>
+                        <div class="tt-voice-description">
+                            Record your question. I'll transcribe
+                            it into the box above.
+                        </div>
+                    </div>
                 </div>
                 """),
                 unsafe_allow_html=True,
             )
-        else:
+            audio = st.audio_input(
+                "Record your question",
+                key="ask_voice_input",
+            )
+            if audio is not None:
+                audio_hash = hashlib.sha256(
+                    audio.getvalue()
+                ).hexdigest()
+                if (
+                    st.session_state.get("last_audio_hash")
+                    != audio_hash
+                ):
+                    with st.spinner("Transcribing your question..."):
+                        transcription = transcribe_audio(audio)
+                    st.session_state["last_audio_hash"] = audio_hash
+                    if transcription.strip():
+                        st.session_state["pending_voice_question"] = (
+                            transcription.strip()
+                        )
+                        clear_ask_response()
+                        st.rerun()
+                    else:
+                        st.warning(
+                            "No speech detected. "
+                            "Please record your question again."
+                        )
+
+        # ---------- PROCESS QUESTION ----------
+        if ask_submitted and cleaned_question:
+            with st.spinner("TradeTutor is thinking..."):
+                st.session_state["ask_tutor_response"] = (
+                    answer_question(cleaned_question)
+                )
+                st.session_state["ask_tutor_last_question"] = (
+                    cleaned_question
+                )
+
+        # ---------- TUTOR RESPONSE ----------
+        with st.container(key="tutor_response_card"):
             st.markdown(
                 textwrap.dedent("""
-                <div class="tt-response-placeholder">
-                    Your answer will appear here.
-                    I'll break it down step by step,
-                    using our lesson materials.
+                <div class="tt-response-heading">
+                    <span class="tt-response-icon">💡</span>
+                    <span>TradeTutor explains</span>
                 </div>
                 """),
                 unsafe_allow_html=True,
             )
+            if st.session_state["ask_tutor_response"]:
+                st.markdown(
+                    st.session_state["ask_tutor_response"]
+                )
+                st.markdown(
+                    textwrap.dedent("""
+                    <div class="response-footer">
+                        Answers are grounded in
+                        TradeTutor's lesson materials.
+                    </div>
+                    """),
+                    unsafe_allow_html=True,
+                )
+            else:
+                st.markdown(
+                    textwrap.dedent("""
+                    <div class="tt-response-placeholder">
+                        Your answer will appear here.
+                        I'll break it down step by step,
+                        using our lesson materials.
+                    </div>
+                    """),
+                    unsafe_allow_html=True,
+                )
 
 # --------------------------------------------------
 # PRACTICE
 # --------------------------------------------------
-st.markdown(
-    textwrap.dedent("""
-<div class="practice-header">
-    <div class="practice-label">PRACTICE SCENARIO</div>
-    <div class="practice-title">🧮 Meridian Robotics</div>
-    <div class="practice-description">
-        Test your understanding with a fictional trade setup.
-        Calculate the risk/reward ratio and explain your reasoning.
-    </div>
-</div>
-<div class="price-row">
-    <div class="price-card">
-        <span>ENTRY PRICE</span>
-        <strong>$60</strong>
-    </div>
-    <div class="price-card stop-card">
-        <span>STOP-LOSS PRICE</span>
-        <strong>$54</strong>
-    </div>
-    <div class="price-card target-card">
-        <span>TARGET PRICE</span>
-        <strong>$78</strong>
-    </div>
-</div>
-"""),
-    unsafe_allow_html=True,
-)
+practice_banner_path = Path(__file__).parent / "assets" / "practice.png"
 
-# --------------------------------------------------
-# PRACTICE INPUTS
-# --------------------------------------------------
-with st.container(border=True):
-    answer_col, reasoning_col = st.columns(
-        [1, 2],
-        gap="large",
-    )
-    with answer_col:
-        numeric_answer = st.number_input(
-            "What is the risk/reward ratio?",
-            min_value=0.0,
-            step=0.1,
-            format="%.1f",
+with st.container(key="practice_panel"):
+    with st.container(key="practice_banner"):
+        if practice_banner_path.is_file():
+            st.image(practice_banner_path, width="stretch")
+        else:
+            st.warning("Practice banner is missing from app/ui/assets/practice.png.")
+
+    with st.container(key="practice_controls"):
+        st.markdown(
+            '<div class="practice-task-heading">Your turn</div>'
+            '<div class="practice-task-description">'
+            'Calculate the risk/reward ratio, then explain how you reached your answer.'
+            '</div>',
+            unsafe_allow_html=True,
         )
-    with reasoning_col:
-        reasoning_text = st.text_area(
-            "Explain your reasoning",
-            placeholder=(
-                "Explain how you calculated the ratio "
-                "and what the result tells you about "
-                "potential risk and reward."
-            ),
-            height=110,
-        )
-    submitted = st.button(
-        "Submit Answer",
-        type="primary",
-        use_container_width=True,
-    )
-
-# --------------------------------------------------
-# PROCESS PRACTICE ANSWER
-# --------------------------------------------------
-if submitted:
-    result = process_attempt(
-        scenario_id="meridian_001",
-        entry_price=60,
-        stop_loss_price=54,
-        target_price=78,
-        numeric_answer=numeric_answer,
-        reasoning_text=reasoning_text,
-    )
-    st.session_state["practice_result"] = result
-
-# --------------------------------------------------
-# YOUR FEEDBACK
-# --------------------------------------------------
-if "practice_result" in st.session_state:
-    result = st.session_state["practice_result"]
-    st.markdown(
-        textwrap.dedent("""
-        <div class="feedback-header">
-            <div class="feedback-title">📊 Your Feedback</div>
-            <div class="feedback-description">
-                Here's how you did on this practice scenario.
-            </div>
-        </div>
-        """),
-        unsafe_allow_html=True,
-    )
-    feedback_col, score_col, misconception_col = st.columns(
-        3,
-        gap="medium",
-    )
-
-    # ---------- ANSWER FEEDBACK ----------
-    with feedback_col:
-        with st.container(border=True):
-            st.markdown("#### Your Answer")
-            if result["is_correct"]:
-                st.success(
-                    f"Correct! The risk/reward ratio is "
-                    f"{result['correct_answer']:.1f}."
+        # --------------------------------------------------
+        # PRACTICE INPUTS
+        # --------------------------------------------------
+        with st.container(key="practice_answer_fields"):
+            answer_col, reasoning_col = st.columns(
+                [1, 2],
+                gap="large",
+            )
+            with answer_col:
+                numeric_answer = st.number_input(
+                    "What is the risk/reward ratio?",
+                    min_value=0.0,
+                    step=0.1,
+                    format="%.1f",
                 )
-            else:
-                st.error(
-                    f"Not quite. The correct risk/reward ratio is "
-                    f"{result['correct_answer']:.1f}."
+                st.caption("Enter the reward-to-risk ratio you calculated.")
+            with reasoning_col:
+                reasoning_text = st.text_area(
+                    "Explain your reasoning",
+                    placeholder=(
+                        "Explain how you calculated the ratio "
+                        "and what the result tells you about "
+                        "potential risk and reward."
+                    ),
+                    height=110,
                 )
-
-    # ---------- REASONING SCORE ----------
-    with score_col:
-        with st.container(border=True):
-            st.markdown("#### Reasoning Score")
-            scores = result["scores"]
-            st.metric(
-                "Total Score",
-                f"{scores['total']:.1f} / 3.0",
-            )
-            st.write(
-                f"Calculation Process: "
-                f"{scores['calculation_process']} / 1"
-            )
-            st.write(
-                f"Interpretation: "
-                f"{scores['interpretation']} / 1"
-            )
-            st.write(
-                f"Terminology: "
-                f"{scores['terminology']} / 1"
+            submitted = st.button(
+                "Submit Answer",
+                type="primary",
+                width="stretch",
             )
 
-    # ---------- MISCONCEPTION CHECK ----------
-    with misconception_col:
-        with st.container(border=True):
-            st.markdown("#### Misconception Check")
-            if result["misconceptions"]:
-                for misconception in result["misconceptions"]:
-                    st.warning(misconception)
-            else:
-                st.success("No misconceptions detected.")
+        # --------------------------------------------------
+        # PROCESS PRACTICE ANSWER
+        # --------------------------------------------------
+        if submitted:
+            result = process_attempt(
+                scenario_id="meridian_001",
+                entry_price=60,
+                stop_loss_price=54,
+                target_price=78,
+                numeric_answer=numeric_answer,
+                reasoning_text=reasoning_text,
+            )
+            st.session_state["practice_result"] = result
+
+        # --------------------------------------------------
+        # YOUR FEEDBACK
+        # --------------------------------------------------
+        if "practice_result" in st.session_state:
+            result = st.session_state["practice_result"]
+            st.markdown(
+                textwrap.dedent("""
+                <div class="feedback-header">
+                    <div class="feedback-title">📊 Your Feedback</div>
+                    <div class="feedback-description">
+                        Here's how you did on this practice scenario.
+                    </div>
+                </div>
+                """),
+                unsafe_allow_html=True,
+            )
+            feedback_col, score_col, misconception_col = st.columns(
+                3,
+                gap="medium",
+            )
+
+            # ---------- ANSWER FEEDBACK ----------
+            with feedback_col:
+                with st.container(border=True):
+                    st.markdown("#### Your Answer")
+                    if result["is_correct"]:
+                        st.success(
+                            f"Correct! The risk/reward ratio is "
+                            f"{result['correct_answer']:.1f}."
+                        )
+                    else:
+                        st.error(
+                            f"Not quite. The correct risk/reward ratio is "
+                            f"{result['correct_answer']:.1f}."
+                        )
+
+            # ---------- REASONING SCORE ----------
+            with score_col:
+                with st.container(border=True):
+                    st.markdown("#### Reasoning Score")
+                    scores = result["scores"]
+                    st.metric(
+                        "Total Score",
+                        f"{scores['total']:.1f} / 3.0",
+                    )
+                    st.write(
+                        f"Calculation Process: "
+                        f"{scores['calculation_process']} / 1"
+                    )
+                    st.write(
+                        f"Interpretation: "
+                        f"{scores['interpretation']} / 1"
+                    )
+                    st.write(
+                        f"Terminology: "
+                        f"{scores['terminology']} / 1"
+                    )
+
+            # ---------- MISCONCEPTION CHECK ----------
+            with misconception_col:
+                with st.container(border=True):
+                    st.markdown("#### Misconception Check")
+                    if result["misconceptions"]:
+                        for misconception in result["misconceptions"]:
+                            st.warning(misconception)
+                    else:
+                        st.success("No misconceptions detected.")
