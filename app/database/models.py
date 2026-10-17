@@ -11,12 +11,3 @@ class ScenarioAnswer(BaseModel):
         if self.entry_price == self.stop_loss_price:
             raise ValueError("Stop-loss price cannot equal entry price — risk would be zero.")
         return self
-
-answer = ScenarioAnswer(
-    numeric_answer=2.0,
-    reasoning_text="Because",
-    entry_price=40,
-    stop_loss_price=35,   # this should now raise a ValueError
-)
-
-print(answer)

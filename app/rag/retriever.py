@@ -1,13 +1,17 @@
 import chromadb
 from sentence_transformers import SentenceTransformer
+from app.rag.embedder import CHROMA_PATH, COLLECTION_NAME, ingest_knowledge
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-client = chromadb.PersistentClient(path="data/chroma_db")
+client = chromadb.PersistentClient(path=str(CHROMA_PATH))
 
-collection = client.get_collection(
-    name="tradetutor_knowledge"
+collection = client.get_or_create_collection(
+    name=COLLECTION_NAME
 )
+
+if collection.count() == 0:
+    ingest_knowledge(collection, model)
 
 def retrieve_chunks(query: str, n_results: int = 3):
     query_embedding = model.encode(query)

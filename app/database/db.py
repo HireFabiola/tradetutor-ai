@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import datetime
 
 
-DB_PATH = Path("data/tradetutor.db")
+DB_PATH = Path(__file__).resolve().parents[2] / "data/tradetutor.db"
 
 
 def initialize_database():
@@ -34,6 +34,7 @@ def save_attempt(
     rubric_score: float,
     misconceptions: list[str],
 ):
+    initialize_database()
     timestamp = datetime.now().isoformat(timespec="seconds")
 
     with sqlite3.connect(DB_PATH) as connection:
@@ -63,6 +64,7 @@ def save_attempt(
 
 
 def get_attempts():
+    initialize_database()
     with sqlite3.connect(DB_PATH) as connection:
         cursor = connection.execute(
             """
